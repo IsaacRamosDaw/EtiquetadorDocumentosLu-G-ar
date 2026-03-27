@@ -1,13 +1,13 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import path from 'node:path';
 import { dialog } from 'electron';
-import { getModelsPath } from './paths.js';
+import { getModelsPath, getProjectsBasePath, getProjectPath } from './paths.js';
 
 // Ruta a la que va:
 // C:\Users\user\AppData\Roaming\etiquetadordocumentos\data\models
 
 //* Lista de modelos para elegir
-//? {fetchModels - home.jsx}
+//? {fetchModels}
 export const getModelsList = () => {
   const modelsPath = getModelsPath();
 
@@ -16,7 +16,7 @@ export const getModelsList = () => {
 };
 
 //* Importar modelo
-//? {handleImport - home.jsx}
+//? {handleImport}
 export const importModel = async (mainWindow) => {
   const modelsPath = getModelsPath();
 
@@ -53,33 +53,119 @@ export const importModel = async (mainWindow) => {
   }
 };
 
-//* Leer el contenido de un modelo
-export const readModel = (modelName) => {
+//* Eliminar modelo
+//? {handleDelete}
+export const deleteModel = async (mainWindow, modelName) => {
   const modelsPath = getModelsPath();
   const filePath = path.join(modelsPath, modelName);
-  
-  if (fs.existsSync(filePath)) {
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
-  }
-  return null;
-};
 
-//* Guardar texto como TXT dialog
-export const saveTextFile = async (mainWindow, content) => {
-  const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-    title: 'Guardar archivo de texto',
-    defaultPath: 'documento_etiquetado.txt',
-    filters: [{ name: 'Documento de texto', extensions: ['txt'] }]
+  const { response } = await dialog.showMessageBox(mainWindow, {
+    type: 'warning',
+    buttons: ['Cancelar', 'Eliminar'],
+    defaultId: 1,
+    cancelId: 0,
+    title: 'Confirmar eliminación',
+    message: `¿Estás seguro de que deseas eliminar el modelo "${modelName}"?`,
+    detail: 'Esta acción no se puede deshacer.'
   });
 
-  if (canceled || !filePath) return { success: false, canceled: true };
+  if (response === 1) {
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        return { success: true };
+      }
+      return { success: false, error: "El archivo no existe" };
+    } catch (error) {
+      console.error("Error deleting model:", error);
+      return { success: false, error: error.message };
+    }
+  }
+  return { success: false, canceled: true };
+};
 
+// ==========================================
+// PROJECT MANAGEMENT (HOME)
+// ==========================================
+
+export const getProjectsList = () => {
+  const projectsPath = getProjectsBasePath();
   try {
-    fs.writeFileSync(filePath, content, 'utf8');
-    return { success: true, filePath };
+    return fs.readdirSync(projectsPath).filter(file => {
+      return fs.statSync(path.join(projectsPath, file)).isDirectory();
+    });
+  } catch (err) {
+    return [];
+  }
+};
+
+export const createProject = (projectName) => {
+  try {
+    getProjectPath(projectName); // Creates dir automatically
+    return { success: true };
   } catch (error) {
-    console.error("Error saving file:", error);
     return { success: false, error: error.message };
   }
+};
+
+export const deleteProject = async (mainWindow, projectName) => {
+  const projectPath = getProjectPath(projectName);
+  const { response } = await dialog.showMessageBox(mainWindow, {
+    type: 'warning',
+    buttons: ['Cancelar', 'Eliminar'],
+    defaultId: 1,
+    cancelId: 0,
+    title: 'Eliminar Proyecto',
+    message: `¿Estás seguro de que deseas eliminar el proyecto "${projectName}" y todo su contenido?`,
+    detail: 'Esta acción no se puede deshacer.'
+  });
+
+  if (response === 1) {
+    try {
+      fs.rmSync(projectPath, { recursive: true, force: true });
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      return { success: false, error: error.message };
+    }
+  }
+  return { success: false, canceled: true };
+};
+
+export const getProjectFiles = (projectName) => {
+  try {
+    const projectPath = getProjectPath(projectName);
+    return fs.readdirSync(projectPath).filter(file => file.endsWith('.txt'));
+  } catch (error) {
+    console.error("Error reading project files:", error);
+    return [];
+  }
+};
+
+export const deleteProjectFile = async (mainWindow, projectName, fileName) => {
+  const projectPath = getProjectPath(projectName);
+  const filePath = path.join(projectPath, fileName);
+
+  const { response } = await dialog.showMessageBox(mainWindow, {
+    type: 'warning',
+    buttons: ['Cancelar', 'Eliminar'],
+    defaultId: 1,
+    cancelId: 0,
+    title: 'Eliminar Archivo',
+    message: `¿Estás seguro de eliminar el archivo "${fileName}" del proyecto "${projectName}"?`,
+    detail: 'Esta acción no se puede deshacer.'
+  });
+
+  if (response === 1) {
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        return { success: true };
+      }
+      return { success: false, error: "El archivo no existe" };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+  return { success: false, canceled: true };
 };

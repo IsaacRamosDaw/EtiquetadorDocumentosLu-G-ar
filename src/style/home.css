@@ -150,6 +150,8 @@
 
 .btn-seconday {
   flex: 1;
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.5);
 }
 
 .btn-primary {
@@ -159,4 +161,120 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.projects-section {
+  width: 100%;
+  margin-top: 1rem;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 1.5rem;
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.projects-title {
+  color: var(--text-main);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.new-project-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px dashed var(--glass-border);
+  color: var(--text-main);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.new-project-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.project-item {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.project-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.project-name {
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delete-project-btn {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.delete-project-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.file-name {
+  color: var(--text-muted);
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.icon-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.icon-btn.delete:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
 }

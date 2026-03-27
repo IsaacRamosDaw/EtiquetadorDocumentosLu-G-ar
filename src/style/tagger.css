@@ -172,6 +172,7 @@
   font-weight: 500;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .tag-btn:hover {
@@ -200,4 +201,88 @@
   font-size: 1.25rem;
   color: var(--text-muted);
   font-weight: 500;
+}
+
+/* Extracted from Tagger.jsx Inline Styles */
+.tagger-title-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.doc-name-input {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text-main);
+  font-size: 1.2rem;
+  min-width: 300px;
+  font-weight: bold;
+  outline: none;
+  transition: var(--transition);
+}
+
+.doc-name-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.model-name-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  max-width: 400px;
+  padding: 2.5rem;
+}
+
+.modal-title {
+  margin: 0 0 1rem 0;
+  color: var(--text-main);
+  font-size: 1.4rem;
+}
+
+.modal-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.modal-select-wrapper {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.modal-btn {
+  flex: 1;
+}
+
+.tag-btn-shortcode {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-left: 0.5rem;
+  font-family: monospace;
 }

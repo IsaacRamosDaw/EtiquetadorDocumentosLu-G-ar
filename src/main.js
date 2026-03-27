@@ -1,7 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
+// import started from 'electron-squirrel-startup';
 import started from 'electron-squirrel-startup';
-import { getModelsList, importModel, readModel, saveTextFile } from './main/home.js';
+import { getModelsList, importModel, deleteModel, getProjectsList, createProject, deleteProject, getProjectFiles, deleteProjectFile } from './main/home.js';
+import { readModel, saveTextFile, readProjectFile, saveProjectFile } from './main/tagger.js';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) { app.quit(); }
@@ -13,29 +15,33 @@ const createWindow = () => {
     webPreferences: { preload: path.join(__dirname, 'preload.js'), },
   });
 
-  // Setup IPC Handlers
+  //! Home ipcMain
   ipcMain.handle('get-models', () => { return getModelsList(); });
-  
   ipcMain.handle('import-model', async () => { return await importModel(mainWindow); });
+  ipcMain.handle('delete-model', async (_, modelName) => { return await deleteModel(mainWindow, modelName); });
+  ipcMain.handle('get-projects', () => getProjectsList());
+  ipcMain.handle('create-project', (_, projectName) => createProject(projectName));
+  ipcMain.handle('delete-project', async (_, projectName) => await deleteProject(mainWindow, projectName));
+  ipcMain.handle('get-project-files', (_, projectName) => getProjectFiles(projectName));
+  ipcMain.handle('delete-project-file', async (_, projectName, fileName) => await deleteProjectFile(mainWindow, projectName, fileName));
 
+  //! Tagger ipcMain
+  // Crear sus respectivos en el preload
   ipcMain.handle('read-model', (_, modelName) => { return readModel(modelName); });
-
-  ipcMain.handle('save-txt', async (_, content) => { return await saveTextFile(mainWindow, content); 
-  });
+  ipcMain.handle('save-txt', async (_, content) => { return await saveTextFile(mainWindow, content); });
+  ipcMain.handle('read-project-file', (_, projectName, fileName) => readProjectFile(projectName, fileName));
+  ipcMain.handle('save-project-file', (_, projectName, fileName, content, oldFileName) => saveProjectFile(projectName, fileName, content, oldFileName));
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) { mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL); }
   else { mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)); }
+  // DEV TOOLS
   mainWindow.webContents.openDevTools();
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+
 app.whenReady().then(() => {
   createWindow();
 
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -43,14 +49,8 @@ app.whenReady().then(() => {
   });
 });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.

@@ -25,3 +25,12 @@ body {
   min-height: 100vh;
   margin: 0;
 }
+
+.btn-sm {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}

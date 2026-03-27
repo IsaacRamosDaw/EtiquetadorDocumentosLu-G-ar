@@ -1,7 +1,7 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import path from 'node:path';
 import { dialog } from 'electron';
-import { getModelsPath } from './paths.js';
+import { getModelsPath, getProjectPath } from './paths.js';
 
 // Ruta a la que va:
 // C:\Users\user\AppData\Roaming\etiquetadordocumentos\data\models
@@ -33,6 +33,35 @@ export const saveTextFile = async (mainWindow, content) => {
     return { success: true, filePath };
   } catch (error) {
     console.error("Error saving file:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+//* Funciones de Proyectos (Tagger)
+export const readProjectFile = (projectName, fileName) => {
+  const projectPath = getProjectPath(projectName);
+  const filePath = path.join(projectPath, fileName);
+  if (fs.existsSync(filePath)) {
+    return fs.readFileSync(filePath, 'utf8');
+  }
+  return null;
+};
+
+export const saveProjectFile = (projectName, fileName, content, oldFileName) => {
+  const projectPath = getProjectPath(projectName);
+  const filePath = path.join(projectPath, fileName);
+  
+  try {
+    if (oldFileName && oldFileName !== fileName) {
+      const oldFilePath = path.join(projectPath, oldFileName);
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
+    fs.writeFileSync(filePath, content, 'utf8');
+    return { success: true };
+  } catch (error) {
+    console.error("Error saving project file:", error);
     return { success: false, error: error.message };
   }
 };

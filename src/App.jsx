@@ -8,6 +8,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:modelName/tagger" element={<Tagger />} />
+        <Route path="/:modelName/tagger/:projectName" element={<Tagger />} />
+        <Route path="/:modelName/tagger/:projectName/:fileName" element={<Tagger />} />
       </Routes>
     </Router>
   )

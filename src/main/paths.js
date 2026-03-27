@@ -15,8 +15,14 @@ const getUserDataPath = () => {
   return dataPath;
 };
 
+export const getProjectsBasePath = () => {
+  const projectsPath = path.join(getUserDataPath(), 'projects');
+  if (!fs.existsSync(projectsPath)) { fs.mkdirSync(projectsPath, { recursive: true }); }
+  return projectsPath;
+};
+
 export const getProjectPath = (projectName) => {
-  const projectPath = path.join(getUserDataPath(), projectName);
+  const projectPath = path.join(getProjectsBasePath(), projectName);
   if (!fs.existsSync(projectPath)) { fs.mkdirSync(projectPath, { recursive: true }); }
   return projectPath;
 };
