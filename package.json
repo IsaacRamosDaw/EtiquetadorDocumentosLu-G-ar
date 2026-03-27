@@ -1,7 +1,7 @@
 {
   "name": "etiquetadordocumentos",
   "productName": "etiquetadordocumentos",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "private": true,
@@ -13,11 +13,20 @@
     "lint": "echo \"No linting configured\"",
     "dist": "electron-builder"
   },
+  "repository": "https://github.com/IsaacRamosDaw/EtiquetadorDocumentosLu-G-ar",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "build": {
     "appId": "com.isaac.etiquetadordocumentos",
     "productName": "Etiquetador Documentos Lu(G)ar",
-    "directories": { "output": "dist" },
-    "win": { "target": "nsis" }
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    }
   },
   "keywords": [],
   "author": {

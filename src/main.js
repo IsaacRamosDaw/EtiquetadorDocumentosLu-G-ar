@@ -1,12 +1,14 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
-// import started from 'electron-squirrel-startup';
 import started from 'electron-squirrel-startup';
 import { getModelsList, importModel, deleteModel, getProjectsList, createProject, deleteProject, getProjectFiles, deleteProjectFile } from './main/home.js';
 import { readModel, saveTextFile, readProjectFile, saveProjectFile } from './main/tagger.js';
-
+import { AppUpdater, autoUpdater } from 'electron-updater';
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) { app.quit(); }
+
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -47,6 +49,26 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  autoUpdater.checkForUpdates();
+});
+
+autoUpdater.on('update-available', () => {
+  console.log('Hay una nueva versión disponible.');
+  autoUpdater.downloadUpdate();
+});
+
+autoUpdater.on('update-not-available', () => {
+  console.log('No hay actualizaciones disponibles.');
+});
+
+autoUpdater.on('update-downloaded', () => {
+  console.log('La actualización se ha descargado. Reiniciando la aplicación...');
+  autoUpdater.quitAndInstall();
+});
+
+autoUpdater.on('error', (error) => {
+  console.error('Error en la actualización:', error);
 });
 
 app.on('window-all-closed', () => {

@@ -1,17 +1,19 @@
 {
   "title": "Etiquetas de documentos",
-  "attributes": "Etiquetas de contenido y características formales",
-  "values":[
-    { "name": "Texto manusctrito", "tag": "man", "description": "Texto manusctrito", "value" : "loc"},
-    { "name": "Texto mecanografiado", "tag": "mec", "description": "Texto mecanografiado", "value" : "loc"},
-    { "name": "Texto corregido sobre original", "tag": "corr", "description": "Texto corregido sobre original", "value" : "loc"},
-    { "name": "Notas o comentarios añadidos", "tag": "anot", "description": "Notas o comentarios añadidos", "value" : "loc"},
-    { "name": "Texto ilegible", "tag": "inint", "description": "Texto ilegible", "value" : "loc"},
-    { "name": "Texto tachado o eliminado", "tag": "tach", "description": "Texto tachado o eliminado", "value" : "loc"},
-    { "name": "Idioma", "tag": "idioma", "description": "Idioma del texto", "value" : "lang"}
-  ],
-  "positional_attributes": [
-    {
+  "attributes": {
+    "name" : "",
+    "description" : "",
+    "values" : [
+      { "name": "Texto manusctrito", "tag": "man", "description": "Texto manusctrito", "value" : "loc"},
+      { "name": "Texto mecanografiado", "tag": "mec", "description": "Texto mecanografiado", "value" : "loc"},
+      { "name": "Texto corregido sobre original", "tag": "corr", "description": "Texto corregido sobre original", "value" : "loc"},
+      { "name": "Notas o comentarios añadidos", "tag": "anot", "description": "Notas o comentarios añadidos", "value" : "loc"},
+      { "name": "Texto ilegible", "tag": "inint", "description": "Texto ilegible", "value" : "loc"},
+      { "name": "Texto tachado o eliminado", "tag": "tach", "description": "Texto tachado o eliminado", "value" : "loc"},
+      { "name": "Idioma", "tag": "idioma", "description": "Idioma del texto", "value" : "lang"}
+    ]
+  },
+  "positional_attributes": {
       "name": "Contenido y Características formales con atributos de ubicación",
       "description": "",
       "values": [
@@ -27,12 +29,15 @@
         { "name": "Margen superior", "tag": "MS", "description": "" },
         { "name": "Margen inferior", "tag": "MI", "description": "" }
       ]
-    }
-  ],
-  "entities": [
-    { "name" : "Nombres de individuos", "tag" : "per", "description" : "Nombre de individuos" },
-    { "name" : "Nombres de lugares", "tag" : "lug", "description" : "Nombre de lugares" },
-    { "name" : "Nombres de organizaciones", "tag" : "org", "description" : "Nombre de organizaciones" },
-    { "name" : "Fechas completas o parciales", "tag" : "fec", "description" : "Fechas completas o parciales" }
-  ]
+    },
+  "entities": {
+    "name" : "Entidades",
+    "description" : "",
+    "values" : [
+      { "name" : "Nombres de individuos", "tag" : "per", "description" : "Nombre de individuos" },
+      { "name" : "Nombres de lugares", "tag" : "lug", "description" : "Nombre de lugares" },
+      { "name" : "Nombres de organizaciones", "tag" : "org", "description" : "Nombre de organizaciones" },
+      { "name" : "Fechas completas o parciales", "tag" : "fec", "description" : "Fechas completas o parciales" }
+    ]
+  }
 }
