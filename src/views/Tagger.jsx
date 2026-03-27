@@ -24,11 +24,8 @@ export default function Tagger() {
         if (data) {
           setModel(data);
           // Auto-select first positional attribute if it exists
-          if (data.positional_attributes && data.positional_attributes.length > 0) {
-            const firstGroup = data.positional_attributes[0];
-            if (firstGroup.values && firstGroup.values.length > 0) {
-              setSelectedPosition(firstGroup.values[0].tag);
-            }
+          if (data.positional_attributes && data.positional_attributes.values && data.positional_attributes.values.length > 0) {
+            setSelectedPosition(data.positional_attributes.values[0].tag);
           }
         }
       } catch (err) {
@@ -173,15 +170,15 @@ export default function Tagger() {
 
         <div className="tagger-sidebar">
           {/* Positional Attributes */}
-          {model.positional_attributes && model.positional_attributes.length > 0 && (
+          {model.positional_attributes && model.positional_attributes.values && model.positional_attributes.values.length > 0 && (
             <div className="sidebar-section">
-              <h3 className="sidebar-subtitle">{model.positional_attributes[0].name || "Posición Actual"}</h3>
+              <h3 className="sidebar-subtitle">{model.positional_attributes.name || "Posición Actual"}</h3>
               <select 
                 className="position-select"
                 value={selectedPosition}
                 onChange={(e) => setSelectedPosition(e.target.value)}
               >
-                {model.positional_attributes[0].values.map((pos, idx) => (
+                {model.positional_attributes.values.map((pos, idx) => (
                   <option key={idx} value={pos.tag} title={pos.description || pos.name}>
                     {pos.name} ({pos.tag})
                   </option>
@@ -191,11 +188,11 @@ export default function Tagger() {
           )}
 
           {/* Attributes */}
-          {model.values && model.values.length > 0 && (
+          {model.attributes && model.attributes.values && model.attributes.values.length > 0 && (
             <div className="sidebar-section">
-              <h3 className="sidebar-subtitle">{model.attributes || "Atributos"}</h3>
+              <h3 className="sidebar-subtitle">{model.attributes.name || "Atributos"}</h3>
               <div className="button-grid">
-                {model.values.map((attr, idx) => (
+                {model.attributes.values.map((attr, idx) => (
                   <button 
                     key={idx} 
                     className="tag-btn attr-btn"
@@ -211,11 +208,11 @@ export default function Tagger() {
           )}
 
           {/* Entities */}
-          {model.entities && model.entities.length > 0 && (
+          {model.entities && model.entities.values && model.entities.values.length > 0 && (
             <div className="sidebar-section">
-              <h3 className="sidebar-subtitle">Entidades</h3>
+              <h3 className="sidebar-subtitle">{model.entities.name || "Entidades"}</h3>
               <div className="button-grid">
-                {model.entities.map((ent, idx) => (
+                {model.entities.values.map((ent, idx) => (
                   <button 
                     key={idx} 
                     className="tag-btn entity-btn"
