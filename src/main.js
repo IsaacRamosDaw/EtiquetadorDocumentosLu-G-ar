@@ -34,10 +34,10 @@ const createWindow = () => {
   ipcMain.handle('read-project-file', (_, projectName, fileName) => readProjectFile(projectName, fileName));
   ipcMain.handle('save-project-file', (_, projectName, fileName, content, oldFileName) => saveProjectFile(projectName, fileName, content, oldFileName));
 
-  if (app.isPackaged) {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
-  } else {
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  } else {
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
   mainWindow.webContents.openDevTools();
 };

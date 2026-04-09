@@ -32,10 +32,7 @@ module.exports = {
           },
         ],
         renderer: [
-          {
-            name: 'main_window',
-            config: 'vite.renderer.config.mjs',
-          },
+          { name: 'main_window', config: 'vite.renderer.config.mjs',},
         ],
       },
     },

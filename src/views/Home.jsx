@@ -18,7 +18,7 @@ function Home() {
   //? fetchProjects
   const fetchProjects = async () => {
     try {
-      const projNames = await window.HomeFunctions.getProjects();
+      const projNames = await window.HomeFunctions.getProjectsFolders();
       const projData = await Promise.all(
         projNames.map(async (p) => {
           const files = await window.HomeFunctions.getProjectFiles(p);

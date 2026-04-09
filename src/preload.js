@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('HomeFunctions', {
   getModels: () => ipcRenderer.invoke('get-models'),
   importModel: () => ipcRenderer.invoke('import-model'),
   deleteModel: (modelName) => ipcRenderer.invoke('delete-model', modelName),
-  getProjects: () => ipcRenderer.invoke('get-projects'),
+  getProjectsFolders: () => ipcRenderer.invoke('get-projects'),
   createProject: (projectName) => ipcRenderer.invoke('create-project', projectName),
   deleteProject: (projectName) => ipcRenderer.invoke('delete-project', projectName),
   getProjectFiles: (projectName) => ipcRenderer.invoke('get-project-files', projectName),
