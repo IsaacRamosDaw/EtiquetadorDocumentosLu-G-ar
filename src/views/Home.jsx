@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../style/general.css';
 import '../style/home.css';
@@ -9,7 +9,6 @@ function Home() {
   const [models, setModels] = useState([]);
   //* Model selected
   const [selectedModel, setSelectedModel] = useState('');
-
   //* Projects state
   const [projects, setProjects] = useState([]);
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
@@ -26,9 +25,8 @@ function Home() {
         })
       );
       setProjects(projData);
-    } catch (error) {
-      console.error("Error al obtener proyectos", error);
     }
+    catch (error) { console.error("Error al obtener proyectos", error); }
   };
 
   //? getModels
@@ -94,8 +92,8 @@ function Home() {
     navigate(`/${selectedModel}/tagger/${projectName}/${fileName}`);
   };
 
-  useEffect(() => { 
-    getAllModels(); 
+  useEffect(() => {
+    getAllModels();
     fetchProjects();
   }, []);
 
@@ -115,7 +113,7 @@ function Home() {
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
             >
-              {models.map((model, index) => ( <option key={index} value={model}>{model}</option> ))}
+              {models.map((model, index) => (<option key={index} value={model}>{model}</option>))}
             </select>
           )
             : (<div className="no-models"> No hay modelos </div>)
@@ -124,7 +122,7 @@ function Home() {
 
         <div className="button-group">
           <button className="btn-secondary" onClick={handleImport}> Importar Modelo </button>
-          {models.length > 0 && ( 
+          {models.length > 0 && (
             <>
               <button className="btn-secondary" onClick={handleDelete}> Eliminar </button>
               <button className="btn-primary" onClick={handleContinue}> Continuar </button>
@@ -138,7 +136,7 @@ function Home() {
             <h2 className="projects-title">Proyectos</h2>
             <button className="new-project-btn" onClick={() => setShowNewProjectModal(true)}>+ Nuevo</button>
           </div>
-          
+
           {projects.length === 0 ? (
             <div className="no-models" style={{ fontSize: '0.95rem', padding: '1.5rem' }}>No hay proyectos creados</div>
           ) : (
@@ -150,7 +148,7 @@ function Home() {
                     ✕
                   </button>
                 </div>
-                
+
                 <div className="file-list">
                   {proj.files.length === 0 ? (
                     <div className="file-name" style={{ fontStyle: 'italic', fontSize: '0.85rem' }}>Carpeta vacía</div>
@@ -176,10 +174,10 @@ function Home() {
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div className="glass-card" style={{ maxWidth: '400px', padding: '2.5rem' }}>
             <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-main)', fontSize: '1.4rem' }}>Nuevo Proyecto</h3>
-            
+
             <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Nombre del Proyecto:</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="model-select"
               value={newProjectName}
               onChange={e => setNewProjectName(e.target.value)}

@@ -17,19 +17,25 @@ const createWindow = () => {
     webPreferences: { preload: path.join(__dirname, 'preload.js'), },
   });
 
-  //! Home ipcMain
+  //? Home
+  // Models
   ipcMain.handle('get-models', () => { return getModelsList(); });
   ipcMain.handle('import-model', async () => { return await importModel(mainWindow); });
   ipcMain.handle('delete-model', async (_, modelName) => { return await deleteModel(mainWindow, modelName); });
-  ipcMain.handle('get-projects', () => getProjectsList());
+
+  // Projects
+  ipcMain.handle('get-projects-folders', () => getProjectsList());
   ipcMain.handle('create-project', (_, projectName) => createProject(projectName));
   ipcMain.handle('delete-project', async (_, projectName) => await deleteProject(mainWindow, projectName));
+
+  // Project Files
   ipcMain.handle('get-project-files', (_, projectName) => getProjectFiles(projectName));
   ipcMain.handle('delete-project-file', async (_, projectName, fileName) => await deleteProjectFile(mainWindow, projectName, fileName));
 
-  //! Tagger ipcMain
-  // Crear sus respectivos en el preload
+  //? Tagger
+  // Models
   ipcMain.handle('read-model', (_, modelName) => { return readModel(modelName); });
+  // Files
   ipcMain.handle('save-txt', async (_, content) => { return await saveTextFile(mainWindow, content); });
   ipcMain.handle('read-project-file', (_, projectName, fileName) => readProjectFile(projectName, fileName));
   ipcMain.handle('save-project-file', (_, projectName, fileName, content, oldFileName) => saveProjectFile(projectName, fileName, content, oldFileName));

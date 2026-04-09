@@ -3,12 +3,17 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('HomeFunctions', {
+  // Models
   getModels: () => ipcRenderer.invoke('get-models'),
   importModel: () => ipcRenderer.invoke('import-model'),
   deleteModel: (modelName) => ipcRenderer.invoke('delete-model', modelName),
-  getProjectsFolders: () => ipcRenderer.invoke('get-projects'),
+
+  // Projects
+  getProjectsFolders: () => ipcRenderer.invoke('get-projects-folders'),
   createProject: (projectName) => ipcRenderer.invoke('create-project', projectName),
   deleteProject: (projectName) => ipcRenderer.invoke('delete-project', projectName),
+
+  // Project Files
   getProjectFiles: (projectName) => ipcRenderer.invoke('get-project-files', projectName),
   deleteProjectFile: (projectName, fileName) => ipcRenderer.invoke('delete-project-file', projectName, fileName),
 });
