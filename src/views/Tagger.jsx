@@ -37,7 +37,7 @@ export default function Tagger() {
 
     // Fetch projects for the save modal
     if (window.HomeFunctions) {
-      window.HomeFunctions.getProjects().then(list => {
+      window.HomeFunctions.getProjectsFolders().then(list => {
         setProjectsList(list || []);
         if (!selectedSaveProject && list && list.length > 0) {
           setSelectedSaveProject(list[0]);

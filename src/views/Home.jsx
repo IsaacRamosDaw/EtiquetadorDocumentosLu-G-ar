@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../style/general.css';
 import '../style/home.css';
 
-function Home() {
+export default function Home() {
   const navigate = useNavigate();
   const [models, setModels] = useState([]);
   // Lista de nombres de archivos de modelos disponibles ej: ["Persona.json", "Legal.json"]
@@ -13,85 +13,75 @@ function Home() {
   const [projects, setProjects] = useState([]);
   // Array de los projectos que son objetos ej: [{ name: 'Carpeta', files: ['doc.txt'] }]
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
-  // Modal para crear un nuevo proyecto
+  // Nombre en el modal para crear un nuevo proyecto
   const [newProjectName, setNewProjectName] = useState('');
   // Nombre del input del modal que aparece
 
-  /**
-   * Obtiene la estructura de carpetas y archivos desde AppData.
-   * Se espera que 'getProjectsFolders' devuelva un array de strings (nombres de carpetas).
-   * Luego, para cada carpeta, 'getProjectFiles' devuelve los nombres de archivos dentro.
-   */
-  const fetchProjects = async () => {
-    try {
-      const projNames = await window.HomeFunctions.getProjectsFolders();
-      // Usamos Promise.all para pedir los archivos de todas las carpetas en paralelo
-      const projData = await Promise.all(
-        projNames.map(async (p) => {
-          const files = await window.HomeFunctions.getProjectFiles(p);
-          return { name: p, files }; // Retornamos un objeto estructurado
-        })
-      );
-      setProjects(projData); // Guardamos la estructura en el estado
-    }
-    catch (e) { console.error("Error al obtener proyectos", e); }
-  };
+  // ==========================================
+  //! MODEL FUNCTIONS
 
   /**
-   * Obtiene los modelos de etiquetas disponibles.
+   ** Obtiene los modelos de etiquetas disponibles.
    * Si hay modelos, selecciona el primero por defecto para evitar que el selector quede vacío.
    */
   const getAllModels = async () => {
     try {
       const availableModels = await window.HomeFunctions.getModels();
       setModels(availableModels || []);
-      if (availableModels && availableModels.length > 0) {
-        setSelectedModel(availableModels[0]);
-      }
+      if (availableModels && availableModels.length > 0) setSelectedModel(availableModels[0]);
     }
     catch (e) { console.error("Error al obtener modelos", e); }
   };
 
   /**
-   * Abre el buscador de archivos del sistema para copiar un nuevo modelo a la carpeta de la app.
+   ** Abre el buscador de archivos del sistema para copiar un nuevo modelo a la carpeta de la app.
    */
-  const handleImport = async () => {
+  const handleImportModel = async () => {
     try {
       const result = await window.HomeFunctions.importModel();
-      // Si el proceso en Electron terminó con éxito, recargamos la lista
       if (result && result.success) { getAllModels(); }
-    } 
-    catch (e) { console.error("Error al importar", e); }
+    }
+    catch (e) { console.error("Error al importar modelo", e); }
   };
 
   /**
-   * Navega a la pantalla del Tagger usando solo el modelo seleccionado.
+   ** Borra físicamente el archivo del modelo seleccionado.
    */
-  const handleContinue = () => { 
-    if (selectedModel) { 
-      navigate(`/${selectedModel}/tagger`); 
-    } 
-  };
-
-  /**
-   * Borra físicamente el archivo del modelo seleccionado.
-   */
-  const handleDelete = async () => {
+  const handleDeleteModel = async () => {
     if (!selectedModel) return;
+
     try {
       const result = await window.HomeFunctions.deleteModel(selectedModel);
-      if (result && result.success) { 
-        getAllModels(); 
-      }
-    } catch (error) { 
-      console.error("Error al eliminar", error); 
-    }
+      if (result && result.success) { getAllModels(); }
+    } catch (error) { console.error("Error al eliminar", error); }
   };
-
-  // --- ACCIONES DE PROYECTOS ---
+  
+  // ==========================================
+  //! PROJECT FUNCTIONS
 
   /**
-   * Crea una nueva carpeta de proyecto. Valida que el nombre no esté vacío.
+   ** Obtiene la estructura de carpetas y archivos desde AppData.
+   * Se espera que 'getProjectsFolders' devuelva un array de strings (nombres de carpetas).
+   * Luego, para cada carpeta, 'getProjectFiles' devuelve los nombres de archivos dentro.
+   */
+  const fetchProjects = async () => {
+    try {
+      const projectNames = await window.HomeFunctions.getProjectsFolders();
+
+      const projectsData = await Promise.all(
+        projectNames.map(async (projectName) => {
+          const files = await window.HomeFunctions.getProjectFiles(projectName);
+          return { name: projectName, files };
+        })
+      );
+
+      setProjects(projectsData);
+    }
+    catch (e) { console.error("Error al obtener proyectos", e); }
+  };
+
+  /**
+   ** Crea una nueva carpeta de proyecto. Valida que el nombre no esté vacío.
    */
   const handleCreateProjectAction = async () => {
     if (!newProjectName.trim()) {
@@ -109,7 +99,7 @@ function Home() {
   };
 
   /**
-   * Borra una carpeta de proyecto completa.
+   ** Borra una carpeta de proyecto completa.
    * @param {string} projectName - Nombre de la carpeta a eliminar.
    */
   const handleDeleteProject = async (projectName) => {
@@ -118,15 +108,29 @@ function Home() {
   };
 
   /**
-   * Borra un archivo específico (.txt) dentro de una carpeta de proyecto.
+   ** Borra un archivo específico (.txt) dentro de una carpeta de proyecto.
    */
   const handleDeleteFile = async (projectName, fileName) => {
     const result = await window.HomeFunctions.deleteProjectFile(projectName, fileName);
     if (result && result.success) fetchProjects();
   };
 
+  // ==========================================
+  //! LIFECYCLE
   /**
-   * Navega a la edición de un archivo específico.
+   ** Se ejecuta una sola vez cuando el componente se monta (carga) por primera vez.
+   */
+  useEffect(() => {
+    getAllModels();
+    fetchProjects();
+  }, []);
+  /**
+   ** Navega al tagger sin elegir ningún texto
+   */
+  const handleContinue = () => { if (selectedModel) navigate(`/${selectedModel}/tagger`); };
+
+  /**
+   ** Navega al tagger de un archivo específico.
    * Obliga a tener un modelo seleccionado para saber qué etiquetas usar al editar.
    */
   const handleEditFile = (projectName, fileName) => {
@@ -137,14 +141,6 @@ function Home() {
     // La ruta incluye el modelo, el proyecto y el archivo para que el Tagger sepa qué cargar
     navigate(`/${selectedModel}/tagger/${projectName}/${fileName}`);
   };
-
-  /**
-   * Se ejecuta una sola vez cuando el componente se monta (carga) por primera vez.
-   */
-  useEffect(() => {
-    getAllModels();
-    fetchProjects();
-  }, []);
 
   return (
     <div className="home">
@@ -170,10 +166,10 @@ function Home() {
         </div>
 
         <div className="button-group">
-          <button className="btn-secondary" onClick={handleImport}> Importar Modelo </button>
+          <button className="btn-secondary" onClick={handleImportModel}> Importar Modelo </button>
           {models.length > 0 && (
             <>
-              <button className="btn-secondary" onClick={handleDelete}> Eliminar </button>
+              <button className="btn-secondary" onClick={handleDeleteModel}> Eliminar </button>
               <button className="btn-primary" onClick={handleContinue}> Continuar </button>
             </>
           )}
@@ -246,4 +242,4 @@ function Home() {
   );
 }
 
-export default Home;
+// export default Home;

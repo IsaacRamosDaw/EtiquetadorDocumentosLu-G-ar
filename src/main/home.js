@@ -5,107 +5,16 @@ import { getModelsPath, getProjectsBasePath, getProjectPath } from './paths.js';
 // C:\Users\user\AppData\Roaming\etiquetadordocumentos\data\models
 
 // ==========================================
-//* PROJECT MANAGEMENT
+//! MODEL MANAGEMENT
 
-//! getProjectsFolders
-export const getProjectsList = () => {
-  const projectsPath = getProjectsBasePath();
-  try {
-    return fs.readdirSync(projectsPath).filter(file => {
-      return fs.statSync(path.join(projectsPath, file)).isDirectory();
-    });
-  } catch (err) {
-    return [];
-  }
-};
-
-//! createProject
-export const createProject = (projectName) => {
-  try {
-    getProjectPath(projectName);
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
-
-//! deleteProject
-export const deleteProject = async (mainWindow, projectName) => {
-  const projectPath = getProjectPath(projectName);
-  const { response } = await dialog.showMessageBox(mainWindow, {
-    type: 'warning',
-    buttons: ['Cancelar', 'Eliminar'],
-    defaultId: 1,
-    cancelId: 0,
-    title: 'Eliminar Proyecto',
-    message: `¿Estás seguro de que deseas eliminar el proyecto "${projectName}" y todo su contenido?`,
-    detail: 'Esta acción no se puede deshacer.'
-  });
-
-  if (response === 1) {
-    try {
-      fs.rmSync(projectPath, { recursive: true, force: true });
-      return { success: true };
-    } catch (error) {
-      console.error("Error deleting project:", error);
-      return { success: false, error: error.message };
-    }
-  }
-  return { success: false, canceled: true };
-};
-
-
-//! deleteProjectFile
-export const deleteProjectFile = async (mainWindow, projectName, fileName) => {
-  const projectPath = getProjectPath(projectName);
-  const filePath = path.join(projectPath, fileName);
-  
-  const { response } = await dialog.showMessageBox(mainWindow, {
-    type: 'warning',
-    buttons: ['Cancelar', 'Eliminar'],
-    defaultId: 1,
-    cancelId: 0,
-    title: 'Eliminar Archivo',
-    message: `¿Estás seguro de eliminar el archivo "${fileName}" del proyecto "${projectName}"?`,
-    detail: 'Esta acción no se puede deshacer.'
-  });
-  
-  if (response === 1) {
-    try {
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        return { success: true };
-      }
-      return { success: false, error: "El archivo no existe" };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  }
-  return { success: false, canceled: true };
-};
-
-//! getProjectFiles
-export const getProjectFiles = (projectName) => {
-  try {
-    const projectPath = getProjectPath(projectName);
-    return fs.readdirSync(projectPath).filter(file => file.endsWith('.txt'));
-  } catch (error) {
-    console.error("Error reading project files:", error);
-    return [];
-  }
-};
-
-// ==========================================
-//* MODEL MANAGEMENT
-
-//! getModels
+//* getModels
 export const getModelsList = () => {
   const modelsPath = getModelsPath();
 
   return fs.readdirSync(modelsPath).filter(file => file.endsWith('.json'));
 };
 
-//! importModel
+//* importModel
 export const importModel = async (mainWindow) => {
   const modelsPath = getModelsPath();
 
@@ -130,7 +39,7 @@ export const importModel = async (mainWindow) => {
   }
 };
 
-//! deleteModel
+//* deleteModel
 export const deleteModel = async (mainWindow, modelName) => {
   const modelsPath = getModelsPath();
   const filePath = path.join(modelsPath, modelName);
@@ -159,3 +68,95 @@ export const deleteModel = async (mainWindow, modelName) => {
   }
   return { success: false, canceled: true };
 };
+
+// ==========================================
+//! PROJECT MANAGEMENT
+
+//* getProjectsFolders
+export const getProjectsList = () => {
+  const projectsPath = getProjectsBasePath();
+  try {
+    return fs.readdirSync(projectsPath).filter(file => {
+      return fs.statSync(path.join(projectsPath, file)).isDirectory();
+    });
+  } catch (err) {
+    return [];
+  }
+};
+
+//* createProject
+export const createProject = (projectName) => {
+  try {
+    getProjectPath(projectName);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+//* deleteProject
+export const deleteProject = async (mainWindow, projectName) => {
+  const projectPath = getProjectPath(projectName);
+  const { response } = await dialog.showMessageBox(mainWindow, {
+    type: 'warning',
+    buttons: ['Cancelar', 'Eliminar'],
+    defaultId: 1,
+    cancelId: 0,
+    title: 'Eliminar Proyecto',
+    message: `¿Estás seguro de que deseas eliminar el proyecto "${projectName}" y todo su contenido?`,
+    detail: 'Esta acción no se puede deshacer.'
+  });
+
+  if (response === 1) {
+    try {
+      fs.rmSync(projectPath, { recursive: true, force: true });
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      return { success: false, error: error.message };
+    }
+  }
+  return { success: false, canceled: true };
+};
+
+
+//* deleteProjectFile
+export const deleteProjectFile = async (mainWindow, projectName, fileName) => {
+  const projectPath = getProjectPath(projectName);
+  const filePath = path.join(projectPath, fileName);
+  
+  const { response } = await dialog.showMessageBox(mainWindow, {
+    type: 'warning',
+    buttons: ['Cancelar', 'Eliminar'],
+    defaultId: 1,
+    cancelId: 0,
+    title: 'Eliminar Archivo',
+    message: `¿Estás seguro de eliminar el archivo "${fileName}" del proyecto "${projectName}"?`,
+    detail: 'Esta acción no se puede deshacer.'
+  });
+  
+  if (response === 1) {
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        return { success: true };
+      }
+      return { success: false, error: "El archivo no existe" };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+  return { success: false, canceled: true };
+};
+
+//* getProjectFiles
+export const getProjectFiles = (projectName) => {
+  try {
+    const projectPath = getProjectPath(projectName);
+    return fs.readdirSync(projectPath).filter(file => file.endsWith('.txt'));
+  } catch (error) {
+    console.error("Error reading project files:", error);
+    return [];
+  }
+};
+
