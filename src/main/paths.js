@@ -39,7 +39,7 @@ export const getProjectPath = (projectName) => {
   const projectPath = path.join(getProjectsBasePath(), projectName);
   // Importante: Aquí se crea la subcarpeta específica para los archivos de ESE proyecto
   if (!fs.existsSync(projectPath)) 
-    {  fs.mkdirSync(projectPath, { recursive: true });  }
+    { fs.mkdirSync(projectPath, { recursive: true }); }
   return projectPath;
 };
 
