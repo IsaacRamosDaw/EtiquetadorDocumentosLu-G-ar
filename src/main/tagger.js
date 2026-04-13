@@ -92,3 +92,26 @@ export const saveProjectFile = (projectName, fileName, content, oldFileName) => 
     return { success: false, error: error.message };
   }
 };
+
+/**
+ * EXPORTAR HTML (Diálogo de Windows)
+ * @param {BrowserWindow} mainWindow - Ventana principal
+ * @param {string} content - El HTML generado
+ */
+export const saveHtmlFile = async (mainWindow, content) => {
+  const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+    title: 'Guardar archivo HTML',
+    defaultPath: 'documento_transformado.html',
+    filters: [{ name: 'Archivo HTML', extensions: ['html'] }]
+  });
+
+  if (canceled || !filePath) return { success: false, canceled: true };
+
+  try {
+    fs.writeFileSync(filePath, content, 'utf8');
+    return { success: true, filePath };
+  } catch (error) {
+    console.error("Error saving HTML file:", error);
+    return { success: false, error: error.message };
+  }
+};

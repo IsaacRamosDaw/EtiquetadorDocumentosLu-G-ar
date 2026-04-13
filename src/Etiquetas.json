@@ -34,10 +34,10 @@
     "name" : "Entidades",
     "description" : "",
     "values" : [
-      { "name" : "Nombres de individuos", "tag" : "per", "description" : "Nombre de individuos" },
-      { "name" : "Nombres de lugares", "tag" : "lug", "description" : "Nombre de lugares" },
-      { "name" : "Nombres de organizaciones", "tag" : "org", "description" : "Nombre de organizaciones" },
-      { "name" : "Fechas completas o parciales", "tag" : "fec", "description" : "Fechas completas o parciales" }
+      { "name" : "Nombres de individuos", "tag" : "per", "description" : "Nombre de individuos", "color":"#94301B" },
+      { "name" : "Nombres de lugares", "tag" : "lug", "description" : "Nombre de lugares", "color":"#945D1B" },
+      { "name" : "Nombres de organizaciones", "tag" : "org", "description" : "Nombre de organizaciones", "color":"#941B8C" },
+      { "name" : "Fechas completas o parciales", "tag" : "fec", "description" : "Fechas completas o parciales", "color":"#1B8E94" }
     ]
   }
 }

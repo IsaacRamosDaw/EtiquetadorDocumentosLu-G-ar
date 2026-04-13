@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { getModelsList, importModel, deleteModel, getProjectsList, createProject, deleteProject, getProjectFiles, deleteProjectFile } from './main/home.js';
-import { readModel, saveTextFile, readProjectFile, saveProjectFile } from './main/tagger.js';
+import { readModel, saveTextFile, readProjectFile, saveProjectFile, saveHtmlFile } from './main/tagger.js';
 import { AppUpdater, autoUpdater } from 'electron-updater';
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) { app.quit(); }
@@ -39,6 +39,7 @@ const createWindow = () => {
   ipcMain.handle('save-txt', async (_, content) => { return await saveTextFile(mainWindow, content); });
   ipcMain.handle('read-project-file', (_, projectName, fileName) => readProjectFile(projectName, fileName));
   ipcMain.handle('save-project-file', (_, projectName, fileName, content, oldFileName) => saveProjectFile(projectName, fileName, content, oldFileName));
+  ipcMain.handle('save-html', async (_, content) => { return await saveHtmlFile(mainWindow, content); });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);

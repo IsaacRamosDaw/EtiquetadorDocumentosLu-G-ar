@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../style/tagger.css';
+import HtmlPreviewModal from './HtmlPreviewModal';
 
 export default function Tagger() {
   const { modelName, projectName, fileName } = useParams();
@@ -13,6 +14,7 @@ export default function Tagger() {
   const [projectsList, setProjectsList] = useState([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [selectedSaveProject, setSelectedSaveProject] = useState(projectName || '');
+  const [showHtmlModal, setShowHtmlModal] = useState(false);
 
   const navigate = useNavigate();
   const textAreaRef = useRef(null);
@@ -152,6 +154,9 @@ export default function Tagger() {
         <button className="btn-secondary btn-sm mr-2" onClick={() => setShowSaveModal(true)}>
           Guardar
         </button>
+        <button className="btn-secondary btn-sm mr-2" onClick={() => setShowHtmlModal(true)}>
+          Transformar HTML
+        </button>
         <button className="btn-primary btn-sm" onClick={handleSaveTxt}>
           Descargar TXT
         </button>
@@ -253,6 +258,15 @@ export default function Tagger() {
             </div>
           </div>
         </div>
+      )}
+
+      {showHtmlModal && (
+        <HtmlPreviewModal 
+          text={text}
+          model={model}
+          title={docName}
+          onClose={() => setShowHtmlModal(false)}
+        />
       )}
     </div>
   );

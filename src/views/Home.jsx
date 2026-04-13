@@ -183,7 +183,7 @@ export default function Home() {
           </div>
 
           {projects.length === 0 ? (
-            <div className="no-models" style={{ fontSize: '0.95rem', padding: '1.5rem' }}>No hay proyectos creados</div>
+            <div className="no-projects-msg">No hay proyectos creados</div>
           ) : (
             projects.map(proj => (
               <div key={proj.name} className="project-item">
@@ -196,7 +196,7 @@ export default function Home() {
 
                 <div className="file-list">
                   {proj.files.length === 0 ? (
-                    <div className="file-name" style={{ fontStyle: 'italic', fontSize: '0.85rem' }}>Carpeta vacía</div>
+                    <div className="empty-folder-msg">Carpeta vacía</div>
                   ) : (
                     proj.files.map(file => (
                       <div key={file} className="file-item">
@@ -216,30 +216,27 @@ export default function Home() {
       </div>
 
       {showNewProjectModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-card" style={{ maxWidth: '400px', padding: '2.5rem' }}>
-            <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-main)', fontSize: '1.4rem' }}>Nuevo Proyecto</h3>
+        <div className="modal-overlay">
+          <div className="glass-card modal-card">
+            <h3 className="modal-title">Nuevo Proyecto</h3>
 
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Nombre del Proyecto:</label>
+            <label className="modal-label">Nombre del Proyecto:</label>
             <input
               type="text"
-              className="model-select"
+              className="model-select modal-input"
               value={newProjectName}
               onChange={e => setNewProjectName(e.target.value)}
               placeholder="Ej. Mi Proyecto"
-              style={{ marginBottom: '1.5rem', width: '100%', padding: '0.8rem', boxSizing: 'border-box' }}
               autoFocus
             />
 
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button className="btn-secondary" style={{ flex: 1 }} onClick={() => setShowNewProjectModal(false)}>Cancelar</button>
-              <button className="btn-primary" style={{ flex: 1 }} onClick={handleCreateProjectAction}>Crear</button>
-            </div>
+            <div className="modal-footer">
+              <button className="btn-secondary" onClick={() => setShowNewProjectModal(false)}>Cancelar</button>
+              <button className="btn-primary" onClick={handleCreateProjectAction}>Crear</button>
+             </div>
           </div>
         </div>
       )}
     </div>
   );
 }
-
-// export default Home;

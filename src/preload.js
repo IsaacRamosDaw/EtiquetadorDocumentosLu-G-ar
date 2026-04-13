@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('HomeFunctions', {
 contextBridge.exposeInMainWorld('TaggerFunctions', {
   readModel: (modelName) => ipcRenderer.invoke('read-model', modelName),
   saveTxt: (content) => ipcRenderer.invoke('save-txt', content),
-  readProjectFile: (projectName, fileName) => ipcRenderer.invoke('read-project-file', projectName, fileName),
-  saveProjectFile: (projectName, fileName, content, oldFileName) => ipcRenderer.invoke('save-project-file', projectName, fileName, content, oldFileName)
-});
+    readProjectFile: (projectName, fileName) => ipcRenderer.invoke('read-project-file', projectName, fileName),
+    saveProjectFile: (projectName, fileName, content, oldFileName) => ipcRenderer.invoke('save-project-file', projectName, fileName, content, oldFileName),
+    saveHtml: (content) => ipcRenderer.invoke('save-html', content)
+  });
