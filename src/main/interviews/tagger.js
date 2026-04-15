@@ -1,0 +1,74 @@
+import fs from 'fs';
+import path from 'path';
+import { getDataPath } from './paths.js';
+
+export const prepareText = (fileName, textContent, projectName = null) => {
+  if (!textContent) {
+    throw new Error("El contenido del texto está vacío o no se recibió correctamente.");
+  }
+
+  const dataPath = projectName ? path.join(getDataPath(), projectName) : getDataPath();
+  if (!fs.existsSync(dataPath)) fs.mkdirSync(dataPath, { recursive: true });
+
+  const lines = textContent.split(/\r?\n/).filter(line => line.trim() !== '');
+  const structuredData = {};
+
+  lines.forEach((line, index) => {
+    const isInterviewer = /^[EI]_?\d*/.test(line.trim() ) && line.trim().startsWith('E');
+    structuredData[index + 1] = {
+      line: line.trim(),
+      Interviewer: isInterviewer,
+      attributes: [],
+      categories: [],
+      entities: []
+    };
+  });
+
+  try {
+    const jsonFileName = fileName.replace(/\.[^/.]+$/, "") + ".json";
+    const filePath = path.join(dataPath, jsonFileName);
+    
+    fs.writeFileSync(filePath, JSON.stringify(structuredData, null, 2), 'utf-8');
+    return { success: true, fileName: jsonFileName };
+  } catch (error) {
+    console.error("Error procesando sesión:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const exportToJson = (filePath, data) => {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    return { success: true, filePath };
+  } catch (error) {
+    console.error("Error exportando JSON:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const getJsonData = (fileName, projectName = null) => {
+  const dataPath = projectName ? path.join(getDataPath(), projectName) : getDataPath();
+  const filePath = path.join(dataPath, `${fileName}.json`);
+  if (fs.existsSync(filePath)) {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(content);
+  }
+  return null;
+};
+
+export const saveCurrentProgress = (fileName, data, projectName = null) => {
+  const dataPath = projectName ? path.join(getDataPath(), projectName) : getDataPath();
+  const filePath = path.join(dataPath, `${fileName}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+  return { success: true };
+};
+
+export const exportToHtml = (filePath, htmlContent) => {
+  try {
+    fs.writeFileSync(filePath, htmlContent, 'utf-8');
+    return { success: true, filePath };
+  } catch (error) {
+    console.error("Error exportando HTML:", error);
+    return { success: false, error: error.message };
+  }
+};

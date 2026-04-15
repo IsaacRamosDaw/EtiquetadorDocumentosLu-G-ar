@@ -25,3 +25,34 @@ contextBridge.exposeInMainWorld('TaggerFunctions', {
     saveProjectFile: (projectName, fileName, content, oldFileName) => ipcRenderer.invoke('save-project-file', projectName, fileName, content, oldFileName),
     saveHtml: (content) => ipcRenderer.invoke('save-html', content)
   });
+
+//! Launcher view (Entrevistas)
+contextBridge.exposeInMainWorld('launcherAPI', {
+  getProjects: () => ipcRenderer.invoke('getProjects'),
+  createProject: (name) => ipcRenderer.invoke('createProject', name),
+  deleteProject: (name) => ipcRenderer.invoke('deleteProject', name),
+
+  getAllModels: () => ipcRenderer.invoke('getAllModels'),
+  importModel: () => ipcRenderer.invoke('importModel'),
+  deleteModel: (name) => ipcRenderer.invoke('deleteModel', name),
+  importSession: (projectName) => ipcRenderer.invoke('importSession', projectName),
+  getAllSessions: (projectName) => ipcRenderer.invoke('getAllSessions', projectName),
+});
+
+//! Create model view (Entrevistas)
+contextBridge.exposeInMainWorld('createModelAPI', {
+  getModelToEdit: (name) => ipcRenderer.invoke('getModelToEdit', name),
+  saveModel: (data) => ipcRenderer.invoke('saveModel', data),
+});
+
+//! Tagger view (Entrevistas)
+contextBridge.exposeInMainWorld('taggingAPI', {
+  prepareText: (fileName, textContent, projectName) => ipcRenderer.invoke('prepareText', fileName, textContent, projectName),
+  getJsonData: (fileName, projectName) => ipcRenderer.invoke('getJsonData', fileName, projectName),
+  getModelConfig: (modelName) => ipcRenderer.invoke('getModelToEdit', modelName),
+  updateLineTags: (fileName, data) => ipcRenderer.invoke('updateLineTags', fileName, data),
+  saveCurrentProgress: (fileName, data, projectName) => ipcRenderer.invoke('saveCurrentProgress', fileName, data, projectName),
+  exportToHtml: (fileName, htmlContent) => ipcRenderer.invoke('exportToHtml', fileName, htmlContent),
+  exportToTxt: (fileName, txtContent) => ipcRenderer.invoke('exportToTxt', fileName, txtContent),
+  exportToJson: (fileName, data) => ipcRenderer.invoke('exportToJson', fileName, data)
+});

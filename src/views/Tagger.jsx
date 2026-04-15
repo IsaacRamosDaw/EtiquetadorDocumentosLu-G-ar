@@ -126,7 +126,7 @@ export default function Tagger() {
     if (result && result.success) {
       alert("Archivo guardado con éxito en el proyecto: " + selectedSaveProject);
       setShowSaveModal(false);
-      navigate(`/${modelName}/tagger/${selectedSaveProject}/${finalFileName}`, { replace: true });
+      navigate(`/documentos/${modelName}/tagger/${selectedSaveProject}/${finalFileName}`, { replace: true });
     } else {
       alert("Error al guardar en proyecto: " + (result ? result.error : 'Desconocido'));
     }
@@ -137,7 +137,7 @@ export default function Tagger() {
   return (
     <div className="tagger-container">
       <div className="tagger-header">
-        <button className="btn-back" onClick={() => navigate('/')}>&larr; Volver</button>
+        <button className="btn-back" onClick={() => navigate('/documentos')}>&larr; Volver</button>
         
         <div className="tagger-title-container">
           <input 

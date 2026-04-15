@@ -127,7 +127,7 @@ export default function Home() {
   /**
    ** Navega al tagger sin elegir ningún texto
    */
-  const handleContinue = () => { if (selectedModel) navigate(`/${selectedModel}/tagger`); };
+  const handleContinue = () => { if (selectedModel) navigate(`/documentos/${selectedModel}/tagger`); };
 
   /**
    ** Navega al tagger de un archivo específico.
@@ -139,13 +139,14 @@ export default function Home() {
       return;
     }
     // La ruta incluye el modelo, el proyecto y el archivo para que el Tagger sepa qué cargar
-    navigate(`/${selectedModel}/tagger/${projectName}/${fileName}`);
+    navigate(`/documentos/${selectedModel}/tagger/${projectName}/${fileName}`);
   };
 
   return (
     <div className="home">
       <div className="glass-card">
         <div className="home-header">
+          <button className="btn-back-global" onClick={() => navigate('/')} style={{ position: 'absolute', top: '20px', left: '20px', background: 'transparent', border: 'none', color: '#9CA3AF', cursor: 'pointer', fontSize: '1.2rem' }}>&larr; Sistema</button>
           <h1 className="home-title">Etiquetador de Documentos</h1>
           <p className="home-subtitle">Selecciona o importa un modelo de etiquetas para comenzar.</p>
         </div>

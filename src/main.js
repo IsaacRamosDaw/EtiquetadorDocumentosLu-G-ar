@@ -85,3 +85,81 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+// ==========================================
+// CANALES DE BACKEND DE ENTREVISTAS
+// ==========================================
+
+import { getSessionsList, importSession, getProjectsList as getProjInterviews, createProject as createProjInterviews, deleteProject as delProjInterviews, getModelsList as getModelsInterviews, importModel as impModelInterviews } from './main/interviews/launcher.js';
+import { saveModel, getModel, getModelToEdit, deleteModel as delModelInterviews } from './main/interviews/createModel.js';
+import { prepareText, getJsonData, saveCurrentProgress, exportToHtml as expHtmlEntrevistas, exportToJson } from './main/interviews/tagger.js';
+import { dialog } from 'electron';
+
+// NOTA: Resolviendo colisiones de nombres de importación con alias.
+
+//! Launcher view
+ipcMain.handle('getProjects', async () => { return getProjInterviews(); }); 
+ipcMain.handle('deleteProject', async (_event, name) => { return delProjInterviews(name); });
+ipcMain.handle('createProject', async (_event, name) => { return createProjInterviews(name); });
+
+ipcMain.handle('getAllModels', async () => { return getModelsInterviews(); });
+ipcMain.handle('importModel', async () => { const mainWindow = BrowserWindow.getFocusedWindow(); return impModelInterviews(mainWindow); });
+ipcMain.handle('deleteModel', async (_event, modelName) => { return delModelInterviews(modelName); });
+
+ipcMain.handle('getAllSessions', async (_event, projectName) => { return getSessionsList(projectName); });
+
+ipcMain.handle('importSession', async (_event, projectName) => {
+  const mainWindow = BrowserWindow.getFocusedWindow();
+  return importSession(mainWindow, projectName);
+});
+
+//! CreateModel View
+ipcMain.handle('getModel', async (_event, modelName) => { return getModel(modelName); });
+ipcMain.handle('getModelToEdit', async (_event, modelName) => { return getModelToEdit(modelName); });
+ipcMain.handle('saveModel', async (_event, modelData) => { return saveModel(modelData); });
+
+//! Tagger View
+ipcMain.handle('prepareText', async (_event, fileName, textContent, projectName) => {
+  return prepareText(fileName, textContent, projectName);
+});
+
+ipcMain.handle('getJsonData', async (_event, fileName, projectName) => {
+  return getJsonData(fileName, projectName);
+});
+
+ipcMain.handle('saveCurrentProgress', async (_event, fileName, data, projectName) => {
+  return saveCurrentProgress(fileName, data, projectName);
+});
+
+ipcMain.handle('exportToHtml', async (_event, fileName, htmlContent) => {
+  const mainWindow = BrowserWindow.getFocusedWindow();
+  const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+    title: 'Exportar Sesión a HTML',
+    defaultPath: fileName.replace(/\.[^/.]+$/, "") + "_export.html",
+    filters: [{ name: 'Páginas Web', extensions: ['html'] }, { name: 'Todos los archivos', extensions: ['*'] }]
+  });
+  if (canceled || !filePath) return { success: false, error: 'Exportación cancelada', canceled: true };
+  return expHtmlEntrevistas(filePath, htmlContent);
+});
+
+ipcMain.handle('exportToTxt', async (_event, fileName, txtContent) => {
+  const mainWindow = BrowserWindow.getFocusedWindow();
+  const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+    title: 'Exportar Sesión a TXT',
+    defaultPath: fileName.replace(/\.[^/.]+$/, "") + "_export.txt",
+    filters: [{ name: 'Archivos de Texto', extensions: ['txt'] }, { name: 'Todos los archivos', extensions: ['*'] }]
+  });
+  if (canceled || !filePath) return { success: false, error: 'Exportación cancelada', canceled: true };
+  return expHtmlEntrevistas(filePath, txtContent);
+});
+
+ipcMain.handle('exportToJson', async (_event, fileName, data) => {
+  const mainWindow = BrowserWindow.getFocusedWindow();
+  const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+    title: 'Exportar Sesión a JSON',
+    defaultPath: fileName,
+    filters: [{ name: 'Archivos JSON', extensions: ['json'] }, { name: 'Todos los archivos', extensions: ['*'] }]
+  });
+  if (canceled || !filePath) return { success: false, error: 'Exportación cancelada', canceled: true };
+  return exportToJson(filePath, data);
+});
